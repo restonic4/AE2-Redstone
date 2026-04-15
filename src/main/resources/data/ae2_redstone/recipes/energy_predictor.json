@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "IQI",
+    " C ",
+    "IRI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "ae2:calculation_processor"
+    },
+    "R": {
+      "item": "minecraft:redstone_torch"
+    },
+    "Q": {
+      "item": "ae2:charged_certus_quartz_crystal"
+    }
+  },
+  "result": {
+    "item": "ae2_redstone:energy_predictor",
+    "count": 1
+  }
+}

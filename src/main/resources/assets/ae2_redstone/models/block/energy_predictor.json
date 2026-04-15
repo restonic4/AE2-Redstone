@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "ae2_redstone:block/energy_predictor_side",
+    "down": "ae2_redstone:block/energy_predictor_side",
+    "up": "ae2_redstone:block/energy_predictor_top",
+    "north": "ae2_redstone:block/energy_predictor_front",
+    "south": "ae2_redstone:block/energy_predictor_back",
+    "east": "ae2_redstone:block/energy_predictor_side",
+    "west": "ae2_redstone:block/energy_predictor_side"
+  }
+}

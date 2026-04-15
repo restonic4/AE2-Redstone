@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ae2redstone",
+  "version": "${version}",
+  "name": "AE2Redstone",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/restonic4/AE2Redstone"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/ae2redstone/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.restonic4.ae2redstone.AE2RedstoneClient"
+    ],
+    "main": [
+      "com.restonic4.ae2redstone.AE2Redstone"
+    ]
+  },
+  "mixins": [
+    "ae2redstone.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

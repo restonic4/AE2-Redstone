@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    " I ",
+    "IEI",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "E": {
+      "item": "ae2:energy_level_emitter"
+    }
+  },
+  "result": {
+    "item": "ae2_redstone:energy_predictor",
+    "count": 1
+  }
+}

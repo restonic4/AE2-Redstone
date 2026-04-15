@@ -1,0 +1,31 @@
+package com.restonic4.ae2redstone;
+
+import com.restonic4.ae2redstone.block.EnergyPredictorBlockEntity;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+
+public class ModMessages {
+    public static final ResourceLocation UPDATE_PREDICTOR_SETTINGS = new ResourceLocation(AE2Redstone.MOD_ID, "update_predictor_settings");
+
+    public static void registerC2SPackets() {
+        ServerPlayNetworking.registerGlobalReceiver(UPDATE_PREDICTOR_SETTINGS, (server, player, handler, buf, responseSender) -> {
+            // Read data from the buffer
+            BlockPos pos = buf.readBlockPos();
+            long targetTimeTicks = buf.readLong();
+            boolean triggerWhenLessThan = buf.readBoolean();
+
+            // Execute on the main server thread
+            server.execute(() -> {
+                // Ensure the block is loaded and within reach
+                if (player.level().isLoaded(pos) && player.blockPosition().closerThan(pos, 8)) {
+                    BlockEntity be = player.level().getBlockEntity(pos);
+                    if (be instanceof EnergyPredictorBlockEntity predictor) {
+                        predictor.updateSettings(targetTimeTicks, triggerWhenLessThan);
+                    }
+                }
+            });
+        });
+    }
+}
