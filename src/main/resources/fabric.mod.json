@@ -17,6 +17,9 @@
     ],
     "main": [
       "com.restonic4.ae2redstone.AE2Redstone"
+    ],
+    "jade": [
+      "com.restonic4.ae2redstone.compat.JadePlugin"
     ]
   },
   "mixins": [
@@ -26,5 +29,8 @@
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
     "minecraft": "${minecraft_version}"
+  },
+  "suggests": {
+    "jade": "*"
   }
 }

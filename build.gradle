@@ -20,6 +20,7 @@ repositories {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/releases"
     }
+    maven { url = "https://api.modrinth.com/maven" }
 }
 
 dependencies {
@@ -34,6 +35,8 @@ dependencies {
     //compileOnly "org.appliedenergistics:appliedenergistics2:15.4.10:api"
     modImplementation "appeng:appliedenergistics2-fabric:15.4.10"
     modImplementation "teamreborn:energy:3.0.0"
+
+    modCompileOnly "maven.modrinth:jade:11.13.1+fabric"
 }
 
 processResources {

@@ -89,16 +89,16 @@ public class EnergyPredictorScreen extends Screen {
             int debugY = centerY + 40;
             int debugColor = 0x55FF55; // Light green
 
-            String storedStr = String.format("Stored Power: %.2f AE", blockEntity.getDebugStored());
-            String genStr = String.format("Generation: %.2f AE/t", blockEntity.getDebugGen());
-            String useStr = String.format("Usage: %.2f AE/t", blockEntity.getDebugUsage());
-            String netStr = String.format("Net Rate: %.2f AE/t", blockEntity.getDebugNet());
+            String storedStr = String.format("Stored Power: %.2f AE", blockEntity.getStoredPower());
+            String genStr = String.format("Generation: %.2f AE/t", blockEntity.getGeneration());
+            String useStr = String.format("Usage: %.2f AE/t", blockEntity.getUsage());
+            String netStr = String.format("Net Rate: %.2f AE/t", blockEntity.getNetRate());
 
             String timeStr;
-            if (blockEntity.getDebugTicksToEmpty() < 0) {
+            if (blockEntity.getTicksToEmpty() < 0) {
                 timeStr = "Time to Empty: INFINITE (Gaining Power)";
             } else {
-                timeStr = String.format("Time to Empty: %.1f sec", blockEntity.getDebugTicksToEmpty() / 20.0);
+                timeStr = String.format("Time to Empty: %.1f sec", blockEntity.getTicksToEmpty() / 20.0);
             }
 
             String emitStr = "Redstone Emitting: " + (blockEntity.isEmitting() ? "YES" : "NO");
