@@ -11,14 +11,11 @@ public class ModMessages {
 
     public static void registerC2SPackets() {
         ServerPlayNetworking.registerGlobalReceiver(UPDATE_PREDICTOR_SETTINGS, (server, player, handler, buf, responseSender) -> {
-            // Read data from the buffer
             BlockPos pos = buf.readBlockPos();
             long targetTimeTicks = buf.readLong();
             boolean triggerWhenLessThan = buf.readBoolean();
 
-            // Execute on the main server thread
             server.execute(() -> {
-                // Ensure the block is loaded and within reach
                 if (player.level().isLoaded(pos) && player.blockPosition().closerThan(pos, 8)) {
                     BlockEntity be = player.level().getBlockEntity(pos);
                     if (be instanceof EnergyPredictorBlockEntity predictor) {

@@ -1,5 +1,7 @@
-package com.restonic4.ae2redstone;
+package com.restonic4.ae2redstone.screens;
 
+import com.restonic4.ae2redstone.AE2Redstone;
+import com.restonic4.ae2redstone.ModMessages;
 import com.restonic4.ae2redstone.block.EnergyPredictorBlockEntity;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
