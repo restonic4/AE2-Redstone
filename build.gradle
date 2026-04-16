@@ -21,6 +21,10 @@ repositories {
         url = "https://maven.terraformersmc.com/releases"
     }
     maven { url = "https://api.modrinth.com/maven" }
+    maven {
+        name = "TeamResourceful"
+        url = "https://maven.teamresourceful.com/repository/maven-public/"
+    }
 }
 
 dependencies {
@@ -32,11 +36,33 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    //compileOnly "org.appliedenergistics:appliedenergistics2:15.4.10:api"
+    // AE2
     modImplementation "appeng:appliedenergistics2-fabric:15.4.10"
     modImplementation "teamreborn:energy:3.0.0"
 
+    // Jade
     modCompileOnly "maven.modrinth:jade:11.13.1+fabric"
+    modLocalRuntime "maven.modrinth:jade:11.13.1+fabric"
+
+    modImplementation "earth.terrarium.adastra:ad_astra-fabric-1.20.1:1.15.18"
+    /*
+    // Ad astra
+    modCompileOnly "maven.modrinth:ad-astra:gZClwdxY"
+    modLocalRuntime "maven.modrinth:ad-astra:gZClwdxY"
+
+    // Resourceful Lib for ad astra
+    modCompileOnly "maven.modrinth:resourceful-lib:UOdaYbhh"
+    modLocalRuntime "maven.modrinth:resourceful-lib:UOdaYbhh"
+
+    // Resourceful Config for ad astra
+    modCompileOnly "maven.modrinth:resourceful-config:2.1.3"
+    modLocalRuntime "maven.modrinth:resourceful-config:2.1.3"
+
+    // Botarium for ad astra
+    modCompileOnly "maven.modrinth:botarium:f3ATcSfq"
+    modLocalRuntime "maven.modrinth:botarium:f3ATcSfq"
+    */
+
 }
 
 processResources {

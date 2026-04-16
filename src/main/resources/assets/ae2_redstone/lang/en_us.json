@@ -1,5 +1,6 @@
 {
   "block.ae2_redstone.energy_predictor": "Energy Predictor",
+  "block.ae2_redstone.energy_converter": "Energy Converter",
   "itemGroup.ae2_redstone.main": "AE2 Redstone",
   "itemGroup.ae2_redstone.main_tab": "AE2 Redstone"
 }

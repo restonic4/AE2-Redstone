@@ -2,7 +2,10 @@ package com.restonic4.ae2redstone.block;
 
 import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.AEBaseBlockEntity;
-import appeng.blockentity.grid.AENetworkBlockEntity;
+import com.restonic4.ae2redstone.block.energy_converter.EnergyConverterBlock;
+import com.restonic4.ae2redstone.block.energy_converter.EnergyConverterBlockEntity;
+import com.restonic4.ae2redstone.block.energy_predictor.EnergyPredictorBlock;
+import com.restonic4.ae2redstone.block.energy_predictor.EnergyPredictorBlockEntity;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
@@ -19,12 +22,24 @@ public class ModBlocks {
     public static final EnergyPredictorBlock PREDICTOR_BLOCK = new EnergyPredictorBlock();
     public static BlockEntityType<EnergyPredictorBlockEntity> PREDICTOR_BLOCK_ENTITY;
 
+    public static final EnergyConverterBlock CONVERTER_BLOCK = new EnergyConverterBlock();
+    public static BlockEntityType<EnergyConverterBlockEntity> CONVERTER_BLOCK_ENTITY;
+
     public static void register() {
         PREDICTOR_BLOCK_ENTITY = registerAE(
                 "energy_predictor",
                 PREDICTOR_BLOCK,
                 EnergyPredictorBlockEntity.class,
                 EnergyPredictorBlockEntity::new,
+                true,
+                false
+        );
+
+        CONVERTER_BLOCK_ENTITY = registerAE(
+                "energy_converter",
+                CONVERTER_BLOCK,
+                EnergyConverterBlockEntity.class,
+                EnergyConverterBlockEntity::new,
                 true,
                 false
         );

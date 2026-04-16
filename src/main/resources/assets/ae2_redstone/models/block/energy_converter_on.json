@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "ae2_redstone:block/energy_converter_side",
+    "up": "ae2_redstone:block/energy_converter_top",
+    "down": "ae2_redstone:block/energy_converter_top",
+    "east": "ae2_redstone:block/energy_converter_side",
+    "west": "ae2_redstone:block/energy_converter_side",
+    "north": "ae2_redstone:block/energy_converter_front",
+    "south": "ae2_redstone:block/energy_converter_back"
+  }
+}

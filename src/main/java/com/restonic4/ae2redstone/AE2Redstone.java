@@ -1,6 +1,7 @@
 package com.restonic4.ae2redstone;
 
 import com.restonic4.ae2redstone.block.ModBlocks;
+import com.restonic4.ae2redstone.compat.EnergyCompat;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.loader.api.FabricLoader;
@@ -11,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
+import static com.restonic4.ae2redstone.block.ModBlocks.CONVERTER_BLOCK;
 import static com.restonic4.ae2redstone.block.ModBlocks.PREDICTOR_BLOCK;
 
 
@@ -26,6 +28,7 @@ public class AE2Redstone implements ModInitializer {
                     .icon(() -> new ItemStack(PREDICTOR_BLOCK))
                     .displayItems((parameters, entries) -> {
                         entries.accept(PREDICTOR_BLOCK);
+                        entries.accept(CONVERTER_BLOCK);
                     })
                     .build()
     );
@@ -34,5 +37,6 @@ public class AE2Redstone implements ModInitializer {
     public void onInitialize() {
         ModBlocks.register();
         ModMessages.registerC2SPackets();
+        EnergyCompat.init();
     }
 }

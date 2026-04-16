@@ -1,12 +1,11 @@
-package com.restonic4.ae2redstone.block;
+package com.restonic4.ae2redstone.block.energy_predictor;
 
 import appeng.api.networking.*;
 import appeng.api.networking.energy.IEnergyService;
 import appeng.api.orientation.BlockOrientation;
 import appeng.api.orientation.RelativeSide;
-import appeng.api.util.AECableType;
 import appeng.blockentity.grid.AENetworkBlockEntity;
-import com.restonic4.ae2redstone.AE2Redstone;
+import com.restonic4.ae2redstone.block.ITickableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,8 +13,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    " C ",
+    " A ",
+    " C "
+  ],
+  "key": {
+    "A": {
+      "item": "ae2:energy_acceptor"
+    },
+    "C": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "result": {
+    "item": "ae2_redstone:energy_converter",
+    "count": 1
+  }
+}
