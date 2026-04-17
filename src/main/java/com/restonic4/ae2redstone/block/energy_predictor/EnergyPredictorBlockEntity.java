@@ -2,10 +2,13 @@ package com.restonic4.ae2redstone.block.energy_predictor;
 
 import appeng.api.networking.*;
 import appeng.api.networking.energy.IEnergyService;
+import appeng.api.networking.ticking.IGridTickable;
+import appeng.api.networking.ticking.TickRateModulation;
+import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.orientation.BlockOrientation;
 import appeng.api.orientation.RelativeSide;
 import appeng.blockentity.grid.AENetworkBlockEntity;
-import com.restonic4.ae2redstone.block.ITickableBlockEntity;
+import appeng.core.AEConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -23,7 +26,7 @@ import java.util.Set;
 import static com.restonic4.ae2redstone.block.ModBlocks.PREDICTOR_BLOCK;
 import static com.restonic4.ae2redstone.block.ModBlocks.PREDICTOR_BLOCK_ENTITY;
 
-public class EnergyPredictorBlockEntity extends AENetworkBlockEntity implements ITickableBlockEntity {
+public class EnergyPredictorBlockEntity extends AENetworkBlockEntity  {
 
     private boolean isEmitting = false;
     private long targetTimeTicks = 2000;
@@ -41,6 +44,18 @@ public class EnergyPredictorBlockEntity extends AENetworkBlockEntity implements 
         this.getMainNode().setFlags();
         this.getMainNode().setIdlePowerUsage(1.0);
         this.getMainNode().setVisualRepresentation(PREDICTOR_BLOCK);
+        this.getMainNode().addService(IGridTickable.class, new IGridTickable() {
+            @Override
+            public TickingRequest getTickingRequest(IGridNode node) {
+                return new TickingRequest(5, 5, false, false);
+            }
+
+            @Override
+            public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
+                onTick(ticksSinceLastCall);
+                return TickRateModulation.SAME;
+            }
+        });
     }
 
     @Override
@@ -69,8 +84,7 @@ public class EnergyPredictorBlockEntity extends AENetworkBlockEntity implements 
         }
     }
 
-    @Override
-    public void tick() {
+    public void onTick(int ticksSinceLastCall) {
         if (this.level == null || this.level.isClientSide()) return;
         if (!getMainNode().isReady()) return;
 
@@ -80,7 +94,7 @@ public class EnergyPredictorBlockEntity extends AENetworkBlockEntity implements 
         IEnergyService energyService = grid.getService(IEnergyService.class);
         if (energyService == null) return;
 
-        if (this.level.getGameTime() % 5 != 0) return;
+        //if (this.level.getGameTime() % 5 != 0) return;
 
         if (!this.getMainNode().isReady() || this.getMainNode().getNode() == null || this.getMainNode().getNode().getGrid() == null) {
             this.storedPower = 0;
@@ -131,9 +145,9 @@ public class EnergyPredictorBlockEntity extends AENetworkBlockEntity implements 
 
         setEmitting(shouldEmit);
 
-        if (this.level.getGameTime() % 20 == 0) {
+        //if (this.level.getGameTime() % 20 == 0) {
             this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 2);
-        }
+        //}
     }
 
     public double getStoredPower() { return storedPower; }

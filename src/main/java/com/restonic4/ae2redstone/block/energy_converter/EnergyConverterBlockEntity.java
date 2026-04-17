@@ -3,12 +3,14 @@ package com.restonic4.ae2redstone.block.energy_converter;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyService;
+import appeng.api.networking.ticking.IGridTickable;
+import appeng.api.networking.ticking.TickRateModulation;
+import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.orientation.BlockOrientation;
 import appeng.api.orientation.RelativeSide;
-import appeng.api.util.AECableType;
 import appeng.blockentity.grid.AENetworkBlockEntity;
-import com.restonic4.ae2redstone.block.ITickableBlockEntity;
 import com.restonic4.ae2redstone.compat.EnergyCompat;
 import com.restonic4.ae2redstone.compat.IEnergyIntegration;
 import net.minecraft.core.BlockPos;
@@ -42,7 +44,7 @@ import static com.restonic4.ae2redstone.block.ModBlocks.CONVERTER_BLOCK_ENTITY;
  * Idle power cost: 2 AE/t (set via setIdlePowerUsage).
  * Transfer cap:    configurable via the GUI (default 1000 AE/t).
  */
-public class EnergyConverterBlockEntity extends AENetworkBlockEntity implements ITickableBlockEntity {
+public class EnergyConverterBlockEntity extends AENetworkBlockEntity  {
 
     // --- Configurable settings (synced to client) ---
     private long maxTransferPerTick = 1000L;   // AE units per tick
@@ -60,6 +62,18 @@ public class EnergyConverterBlockEntity extends AENetworkBlockEntity implements 
         this.getMainNode().setFlags();
         this.getMainNode().setIdlePowerUsage(10.0);
         this.getMainNode().setVisualRepresentation(CONVERTER_BLOCK);
+        this.getMainNode().addService(IGridTickable.class, new IGridTickable() {
+            @Override
+            public TickingRequest getTickingRequest(IGridNode node) {
+                return new TickingRequest(5, 5, false, false);
+            }
+
+            @Override
+            public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
+                onTick(ticksSinceLastCall);
+                return TickRateModulation.SAME;
+            }
+        });
     }
 
     // -------------------------------------------------------------------------
@@ -73,8 +87,7 @@ public class EnergyConverterBlockEntity extends AENetworkBlockEntity implements 
     // -------------------------------------------------------------------------
     // Tick
 
-    @Override
-    public void tick() {
+    public void onTick(int ticksSinceLastCall) {
         if (this.level == null || this.level.isClientSide()) return;
         if (!getMainNode().isReady()) return;
 
@@ -82,7 +95,7 @@ public class EnergyConverterBlockEntity extends AENetworkBlockEntity implements 
         if (grid == null) return;
 
         // Only run every 5 ticks to match the energy predictor style
-        if (this.level.getGameTime() % 5 != 0) return;
+        //if (this.level.getGameTime() % 5 != 0) return;
 
         IEnergyService energyService = grid.getService(IEnergyService.class);
         if (energyService == null) return;

@@ -2,6 +2,12 @@ package com.restonic4.ae2redstone.block;
 
 import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.ClientTickingBlockEntity;
+import appeng.blockentity.ServerTickingBlockEntity;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlockEntities;
+import appeng.core.definitions.BlockDefinition;
+import com.google.common.base.Preconditions;
 import com.restonic4.ae2redstone.block.energy_converter.EnergyConverterBlock;
 import com.restonic4.ae2redstone.block.energy_converter.EnergyConverterBlockEntity;
 import com.restonic4.ae2redstone.block.energy_predictor.EnergyPredictorBlock;
@@ -17,6 +23,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
+
 import static com.restonic4.ae2redstone.AE2Redstone.MOD_ID;
 
 public class ModBlocks {
@@ -31,18 +40,14 @@ public class ModBlocks {
                 "energy_predictor",
                 PREDICTOR_BLOCK,
                 EnergyPredictorBlockEntity.class,
-                EnergyPredictorBlockEntity::new,
-                true,
-                false
+                EnergyPredictorBlockEntity::new
         );
 
         CONVERTER_BLOCK_ENTITY = registerAE(
                 "energy_converter",
                 CONVERTER_BLOCK,
                 EnergyConverterBlockEntity.class,
-                EnergyConverterBlockEntity::new,
-                true,
-                false
+                EnergyConverterBlockEntity::new
         );
     }
 
@@ -52,13 +57,11 @@ public class ModBlocks {
         Registry.register(BuiltInRegistries.ITEM, identifier, new BlockItem(block, new FabricItemSettings()));
     }
 
-    private static <T extends AEBaseBlockEntity & ITickableBlockEntity> BlockEntityType<T> registerAE(
+    private static <T extends AEBaseBlockEntity> BlockEntityType<T> registerAE(
             String id,
             AEBaseEntityBlock<T> block,
             Class<T> beClass,
-            FabricBlockEntityTypeBuilder.Factory<T> factory,
-            boolean tickServer,
-            boolean tickClient
+            FabricBlockEntityTypeBuilder.Factory<T> factory
     ) {
         registerBlockWithItem(id, block);
 
@@ -68,8 +71,18 @@ public class ModBlocks {
                 FabricBlockEntityTypeBuilder.create(factory, block).build()
         );
 
-        BlockEntityTicker<T> serverTicker = tickServer ? (lvl, pos, st, be) -> be.tick() : null;
-        BlockEntityTicker<T> clientTicker = tickClient ? (lvl, pos, st, be) -> be.tick() : null;
+        BlockEntityTicker<T> serverTicker = null;
+        if (ServerTickingBlockEntity.class.isAssignableFrom(beClass)) {
+            serverTicker = (level, pos, state, entity) -> {
+                ((ServerTickingBlockEntity) entity).serverTick();
+            };
+        }
+        BlockEntityTicker<T> clientTicker = null;
+        if (ClientTickingBlockEntity.class.isAssignableFrom(beClass)) {
+            clientTicker = (level, pos, state, entity) -> {
+                ((ClientTickingBlockEntity) entity).clientTick();
+            };
+        }
 
         block.setBlockEntity(beClass, type, clientTicker, serverTicker);
 
