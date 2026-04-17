@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.patryk3211.powergrid.electricity.battery.BatteryBlockEntity;
 
 public class PowerGridIntegration implements IEnergyIntegration {
-    public static final double CONVERSION_RATIO = 2.0;
+    public static final double CONVERSION_RATIO = 0.5;
 
     @Override
     public long transferEnergy(BlockPos pos, Direction direction, long maxAeAmount, ServerLevel level) {
