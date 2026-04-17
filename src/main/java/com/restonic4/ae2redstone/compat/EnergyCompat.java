@@ -24,14 +24,9 @@ public class EnergyCompat {
             tryRegister("com.restonic4.ae2redstone.compat.AdAstraIntegration", "Ad Astra");
         }
 
-        // To add a new mod: copy the block above, change the mod ID and class name.
-        // The class will only be loaded when that mod is present.
-    }
-
-    /** Returns the first available integration, or null if none are loaded. */
-    @Nullable
-    public static IEnergyIntegration getFirst() {
-        return INTEGRATIONS.isEmpty() ? null : INTEGRATIONS.get(0);
+        if (FabricLoader.getInstance().isModLoaded("powergrid")) {
+            tryRegister("com.restonic4.ae2redstone.compat.PowerGridIntegration", "Create: Power Grid");
+        }
     }
 
     /** Returns all loaded integrations (useful for a future multi-output block). */

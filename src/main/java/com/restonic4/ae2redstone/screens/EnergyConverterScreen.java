@@ -68,17 +68,28 @@ public class EnergyConverterScreen extends Screen {
         g.drawCenteredString(this.font, this.title, cx, cy - 70, 0xFFFFFF);
         g.drawString(this.font, "Max Transfer (AE/t):", cx - 50, cy - 45, 0xA0A0A0);
 
-        // Show which mod we're outputting to
-        IEnergyIntegration integration = EnergyCompat.getFirst();
-        String targetMod = integration != null ? integration.getModName() : "No compatible mod loaded";
-        int modColor = integration != null ? 0x55FF55 : 0xFF5555;
+        // --- SMART UI DISPLAY ---
+        String activeMod = blockEntity.getActiveModName();
+        // Null check included just to be safe during synchronization
+        boolean isConnected = activeMod != null && !activeMod.isEmpty();
+
+        String targetMod = isConnected ? activeMod : "Not connected / Idle";
+        int modColor = isConnected ? 0x55FF55 : 0xFF5555;
+
         g.drawCenteredString(this.font, "Output: " + targetMod, cx, cy + 35, modColor);
 
-        if (integration != null) {
-            String ratio = String.format("Ratio: 1 AE = %.1f %s energy",
-                    integration.getConversionRatio(), integration.getModName());
-            g.drawCenteredString(this.font, ratio, cx, cy + 48, 0x888888);
+        // If we are actively connected, find the ratio for that specific mod and display it
+        if (isConnected) {
+            for (IEnergyIntegration integration : EnergyCompat.getAll()) {
+                if (integration.getModName().equals(activeMod)) {
+                    String ratio = String.format("Ratio: 1 AE = %.1f %s energy",
+                            integration.getConversionRatio(), integration.getModName());
+                    g.drawCenteredString(this.font, ratio, cx, cy + 48, 0x888888);
+                    break;
+                }
+            }
         }
+        // ------------------------
 
         // Dev debug info
         if (AE2Redstone.IS_DEV) {

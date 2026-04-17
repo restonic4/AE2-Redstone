@@ -120,10 +120,12 @@ public class JadePlugin implements IWailaPlugin {
             double  stored          = tag.getDouble("StoredPower");
             double  capacity        = tag.getDouble("NetworkCapacity");
 
-            // Which mod is the output target?
-            IEnergyIntegration integration = EnergyCompat.getFirst();
-            String modName = integration != null ? integration.getModName() : "None";
-            tooltip.add(Component.literal("§7Output: §f" + modName));
+            // --- SMART JADE DISPLAY ---
+            String activeModName = tag.getString("ActiveModName");
+            String displayMod = (activeModName != null && !activeModName.isEmpty()) ? activeModName : "None";
+
+            tooltip.add(Component.literal("§7Output: §f" + displayMod));
+            // --------------------------
 
             // Active state
             tooltip.add(Component.literal(active ? "§aTransferring" : "§7Idle"));

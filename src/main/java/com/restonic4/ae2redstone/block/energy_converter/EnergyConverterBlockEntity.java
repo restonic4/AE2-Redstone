@@ -53,6 +53,8 @@ public class EnergyConverterBlockEntity extends AENetworkBlockEntity implements 
     private double storedPower = 0;
     private double networkCapacity = 0;
 
+    private String activeModName = "";
+
     public EnergyConverterBlockEntity(BlockPos pos, BlockState state) {
         super(CONVERTER_BLOCK_ENTITY, pos, state);
         this.getMainNode().setFlags();
@@ -88,10 +90,10 @@ public class EnergyConverterBlockEntity extends AENetworkBlockEntity implements 
         this.storedPower   = energyService.getStoredPower();
         this.networkCapacity = energyService.getMaxStoredPower();
 
-        // Get the integration (null = no compatible mod loaded)
-        IEnergyIntegration integration = EnergyCompat.getFirst();
+        // Get all loaded integrations instead of just the first one
+        java.util.List<IEnergyIntegration> integrations = EnergyCompat.getAll();
 
-        if (integration == null || this.storedPower <= 0) {
+        if (integrations.isEmpty() || this.storedPower <= 0) {
             setActive(false);
             this.lastTransferred = 0;
             syncToClient();
@@ -119,19 +121,33 @@ public class EnergyConverterBlockEntity extends AENetworkBlockEntity implements 
             return;
         }
 
-        // Let the integration push the energy; it returns how much AE was consumed
-        long actuallyConsumedAe = integration.transferEnergy(
-                this.worldPosition, facing, toTransfer, (ServerLevel) this.level
-        );
+        long actuallyConsumedAe = 0;
+        String foundModName = "";
+
+        // Iterate through all compatible mods and attempt to transfer
+        for (IEnergyIntegration integration : integrations) {
+            actuallyConsumedAe = integration.transferEnergy(
+                    this.worldPosition, facing, toTransfer, (ServerLevel) this.level
+            );
+
+            // If the adjacent block accepted energy from this integration,
+            // break the loop so we don't accidentally transfer multiple times
+            if (actuallyConsumedAe > 0) {
+                foundModName = integration.getModName();
+                break;
+            }
+        }
 
         if (actuallyConsumedAe > 0) {
             // Extract from AE network
             energyService.extractAEPower(actuallyConsumedAe, Actionable.MODULATE, PowerMultiplier.CONFIG);
             this.lastTransferred = actuallyConsumedAe;
+            this.activeModName = foundModName;
             setActive(true);
         } else {
-            // Target was full or absent
+            // Target was full, absent, or incompatible with all loaded mods
             this.lastTransferred = 0;
+            this.activeModName = "";
             setActive(false);
         }
 
@@ -207,6 +223,8 @@ public class EnergyConverterBlockEntity extends AENetworkBlockEntity implements 
         tag.putLong("LastTransferred", this.lastTransferred);
         tag.putDouble("StoredPower", this.storedPower);
         tag.putDouble("NetworkCapacity", this.networkCapacity);
+        tag.putString("ActiveModName", getActiveModName());
+
     }
 
     @Override
@@ -218,6 +236,7 @@ public class EnergyConverterBlockEntity extends AENetworkBlockEntity implements 
         this.lastTransferred = data.getLong("LastTransferred");
         this.storedPower    = data.getDouble("StoredPower");
         this.networkCapacity = data.getDouble("NetworkCapacity");
+        this.activeModName = data.getString("ActiveModName");
     }
 
     // -------------------------------------------------------------------------
@@ -244,6 +263,7 @@ public class EnergyConverterBlockEntity extends AENetworkBlockEntity implements 
         this.lastTransferred   = data.readLong();
         this.storedPower       = data.readDouble();
         this.networkCapacity   = data.readDouble();
+        this.activeModName     = data.readUtf();
         return true;
     }
 
@@ -255,5 +275,10 @@ public class EnergyConverterBlockEntity extends AENetworkBlockEntity implements 
         data.writeLong(this.lastTransferred);
         data.writeDouble(this.storedPower);
         data.writeDouble(this.networkCapacity);
+        data.writeUtf(getActiveModName());
+    }
+
+    public String getActiveModName() {
+        return this.activeModName == null ? "" : this.activeModName;
     }
 }
